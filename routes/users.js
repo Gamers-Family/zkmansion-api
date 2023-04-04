@@ -1,26 +1,28 @@
-const pool = require("../services/DBConnection");
+//const pool = require("../services/DBConnection");
+const mysql = require("mysql");
 const express = require("express");
 const router = express.Router();
 
 // Define a GET route
 router.get("/profile", async (req, res) => {
-  let conn;
-  try {
-    // Get a connection from the pool
-    conn = await pool.getConnection();
+  var con = mysql.createConnection({
+    host: "zkmansion.ddns.net",
+    user: "root",
+    password: "root",
+    database: "zkdatabase",
+  });
 
-    // Execute the query
-    const rows = await conn.query("SELECT * FROM users");
-
-    // Return the results
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal server error");
-  } finally {
-    // Release the connection back to the pool
-    if (conn) conn.release();
-  }
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+    var sql = "SELECT * FROM users";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("Response Loaded");
+      // console.log(result);
+      return res.send(result);
+    });
+  });
 });
 
 module.exports = router;

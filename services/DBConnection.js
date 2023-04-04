@@ -1,13 +1,22 @@
-const mariadb = require("mariadb");
+module.exports = (req, res) => {
+  var mysql = require("mysql");
 
-// This should be in a .env file, it's just for testing
-const pool = mariadb.createPool({
-  host: "zkmansion.ddns.net",
-  port: 3306,
-  user: "root",
-  password: "root",
-  database: "zkdatabase",
-  connectionLimit: 30,
-});
+  var con = mysql.createConnection({
+    host: "zkmansion.ddns.net",
+    user: "root",
+    password: "root",
+    database: "zkdatabase",
+  });
 
-module.export = pool;
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+    var sql = "SELECT * FROM users";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("Response Loaded");
+      // console.log(result);
+      return res.send(result);
+    });
+  });
+};
