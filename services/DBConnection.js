@@ -2,11 +2,11 @@ const mariadb = require("mariadb");
 
 // This should be in a .env file, it's just for testing
 const pool = mariadb.createPool({
-  host: "localhost",
-  user: "your_user",
-  password: "your_password",
-  database: "your_database",
-  connectionLimit: 5,
+  host: "zkmansion.ddns.net:3306",
+  user: "root",
+  password: "root",
+  database: "zkdatabase",
+  connectionLimit: 30,
 });
 
 module.export = pool;
