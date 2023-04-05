@@ -4,8 +4,8 @@ const express = require("express");
 const router = express.Router();
 
 // Define a GET route
-router.get("/profile", async (req, res) => {
-  var con = mysql.createConnection({
+router.get("/users", async (req, res) => {
+  const con = mysql.createConnection({
     host: "zkmansion.ddns.net",
     user: "root",
     password: "root",
@@ -14,14 +14,31 @@ router.get("/profile", async (req, res) => {
 
   con.connect(function (err) {
     if (err) throw err;
-    console.log("Connected!");
-    var sql = "SELECT * FROM users";
-    con.query(sql, function (err, result) {
+
+    con.query("SELECT * FROM users", function (err, result) {
       if (err) throw err;
-      console.log("Response Loaded");
-      // console.log(result);
       return res.send(result);
     });
+  });
+});
+
+router.get("/profile", async (req, res) => {
+  const con = mysql.createConnection({
+    host: "zkmansion.ddns.net",
+    user: "root",
+    password: "root",
+    database: "zkdatabase",
+  });
+
+  con.connect(function (err) {
+    if (err) throw err;
+    con.query(
+      `SELECT * FROM users WHERE userCode = '${req.query.userCode}'`,
+      function (err, result) {
+        if (err) throw err;
+        return res.send(result[0]);
+      }
+    );
   });
 });
 
