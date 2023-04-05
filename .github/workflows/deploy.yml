@@ -10,11 +10,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: SSH connection to Server
-      uses: easingthemes/ssh-deploy@v2.1.5
+    - name: SSH config
+      uses: shimataro/ssh-key-action@v2
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-                    bash /home/villwulf/project/external/startup.sh
+    - name: SSH connection to Server
+      run: ssh -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} /home/villwulf/project/external/startup.sh zkapi
