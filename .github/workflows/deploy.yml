@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: SSH connection to Server
+      uses: easingthemes/ssh-deploy@v2.1.5
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
