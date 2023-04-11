@@ -1,22 +1,11 @@
-module.exports = (req, res) => {
-  var mysql = require("mysql");
+const mysql = require("mysql");
 
-  var con = mysql.createConnection({
-    host: "zkmansion.ddns.net",
-    user: "root",
-    password: "root",
-    database: "zkdatabase",
-  });
-
-  con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
-    var sql = "SELECT * FROM users";
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("Response Loaded");
-      // console.log(result);
-      return res.send(result);
-    });
+const createConnection = () => {
+  return mysql.createConnection({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
   });
 };
+module.exports = createConnection;
