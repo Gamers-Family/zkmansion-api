@@ -18,6 +18,7 @@ app.use("/api/users/", users);
 app.use("/api/premios/", premios);
 app.use("/api/horarios/", horarios);
 app.use("/api/admin/", admin);
-app.get("/", (_, res) => res.send("ZK Mansion API 1.0.0 Working!!"));
+
+app.get("/api", (_, res) => res.send("ZK Mansion API 1.0.0 Working!!"));
 
 app.listen(port, () => console.log(`App listening on port ${port}`));
