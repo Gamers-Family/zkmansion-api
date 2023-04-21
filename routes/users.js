@@ -106,7 +106,7 @@ router.get("/ranking", async (req, res) => {
     }
 
     con.query(
-      `SELECT apodo, userCode, rango, ${req.query.game} as points FROM users ORDER BY points DESC`,
+      `SELECT apodo, userCode, rango, imagen, ${req.query.game} as points FROM users JOIN media ON users.id = media.id ORDER BY points DESC`,
       function (err, result) {
         if (err) throw err;
         return res.send(result);
@@ -133,6 +133,10 @@ router.get("/with-images", async (req, res) => {
     );
     return;
   });
+});
+
+router.get("/misions", (req, res) => {
+  // SELECT MISIONES AQUI
 });
 
 module.exports = router;

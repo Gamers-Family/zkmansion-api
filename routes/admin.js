@@ -33,6 +33,11 @@ router.get("/add", async (req, res) => {
   });
 });
 
+router.get("/new-mision", () => {
+  // Crear misiones aqui
+  // Usar el select que ya existe para elegir a quien se crea la mision (Incluido Todos)
+});
+
 const _updateRanks = async () => {
   const con = createConnection();
 
