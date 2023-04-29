@@ -91,7 +91,7 @@ router.get("/ranking", async (req, res) => {
 
     if (req.query.game === "global") {
       con.query(
-        `SELECT apodo, rango, imagen
+        `SELECT apodo, rango, imagen,
         SUM(futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points
         FROM users
         JOIN media ON users.id = media.id
@@ -136,7 +136,18 @@ router.get("/with-images", async (req, res) => {
 });
 
 router.get("/misions", (req, res) => {
-  // SELECT MISIONES AQUI
+  const con = createConnection();
+  //TODO
+  con.connect(function (err) {
+    if (err) throw err;
+    con.query(
+      `SELECT zkoins, rango, SUM(futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points FROM users WHERE userCode = '${req.query.userCode}'`,
+      function (err, result) {
+        if (err) throw err;
+        return res.send(result[0]);
+      }
+    );
+  });
 });
 
 module.exports = router;
