@@ -137,14 +137,14 @@ router.get("/with-images", async (req, res) => {
 
 router.get("/misions", (req, res) => {
   const con = createConnection();
-  //TODO
+  const { userCode } = req.query;
   con.connect(function (err) {
     if (err) throw err;
     con.query(
-      `SELECT zkoins, rango, SUM(futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points FROM users WHERE userCode = '${req.query.userCode}'`,
+      `SELECT m.mision, m.type FROM user_mision um INNER JOIN misiones m ON um.idmision = m.id INNER JOIN users u ON um.iduser = u.id WHERE u.userCode = '${userCode}'`,
       function (err, result) {
         if (err) throw err;
-        return res.send(result[0]);
+        return res.send(result);
       }
     );
   });

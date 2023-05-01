@@ -33,9 +33,60 @@ router.get("/add", async (req, res) => {
   });
 });
 
-router.get("/new-mision", () => {
-  // Crear misiones aqui
-  // Usar el select que ya existe para elegir a quien se crea la mision (Incluido Todos)
+router.get("/new-mision", (req, res) => {
+  const con = createConnection();
+  const { userCode, mision, type } = req.query;
+
+  if (userCode === "todos") {
+    // Insertamos la nueva misión
+    con.query(
+      `INSERT INTO misiones (mision, type) VALUES ('${mision}', '${type}')`,
+      function (err, result) {
+        if (err) throw err;
+        const missionId = result.insertId;
+        // Obtenemos los IDs de todos los usuarios
+        con.query(`SELECT id FROM users`, function (err, results) {
+          if (err) throw err;
+          const values = results
+            .map((row) => `(${row.id}, ${missionId})`)
+            .join(",");
+          // Insertamos las relaciones en la tabla users_missions
+          con.query(
+            `INSERT INTO user_mision (iduser, idmision) VALUES ${values}`,
+            function (err, result) {
+              if (err) throw err;
+              return res.send(result);
+            }
+          );
+        });
+      }
+    );
+  } else {
+    // Buscamos el usuario por su código
+    con.query(
+      `SELECT id FROM users WHERE userCode='${userCode}'`,
+      function (err, result) {
+        if (err) throw err;
+        const userId = result[0].id;
+        // Insertamos la nueva misión
+        con.query(
+          `INSERT INTO misiones (mision, type) VALUES ('${mision}', '${type}')`,
+          function (err, result) {
+            if (err) throw err;
+            const missionId = result.insertId;
+            // Creamos la relación en la tabla users-missions
+            con.query(
+              `INSERT INTO user_mision (iduser, idmision) VALUES (${userId}, ${missionId})`,
+              function (err, result) {
+                if (err) throw err;
+                return res.send(result);
+              }
+            );
+          }
+        );
+      }
+    );
+  }
 });
 
 const _updateRanks = async () => {
