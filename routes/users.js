@@ -150,4 +150,19 @@ router.get("/misions", (req, res) => {
   });
 });
 
+router.get("/jobs", (req, res) => {
+  const con = createConnection();
+  const { userCode } = req.query;
+  con.connect(function (err) {
+    if (err) throw err;
+    con.query(
+      `SELECT j.text, j.icon, j.dia, j.hora FROM user_job uj INNER JOIN jobs j ON uj.idjob = j.id INNER JOIN users u ON uj.iduser = u.id WHERE u.userCode = '${userCode}'`,
+      function (err, result) {
+        if (err) throw err;
+        return res.send(result);
+      }
+    );
+  });
+});
+
 module.exports = router;
