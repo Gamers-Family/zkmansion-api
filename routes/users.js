@@ -156,7 +156,7 @@ router.get("/jobs", (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     con.query(
-      `SELECT j.text, j.icon, j.dia, j.hora FROM user_job uj INNER JOIN jobs j ON uj.idjob = j.id INNER JOIN users u ON uj.iduser = u.id WHERE u.userCode = '${userCode}'`,
+      `SELECT j.text, j.icon, j.dia, j.hora FROM user_job uj INNER JOIN jobs j ON uj.idjob = j.id INNER JOIN users u ON uj.iduser = u.id WHERE u.userCode = '${userCode}' ORDER BY j.dia ASC, j.hora`,
       function (err, result) {
         if (err) throw err;
         return res.send(result);
