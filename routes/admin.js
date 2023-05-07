@@ -22,6 +22,30 @@ router.get("/add", async (req, res) => {
 
     const updateRanksQuery = await _updateRanks();
 
+    if (isTodos) {
+      // Obtenemos los IDs de todos los usuarios
+      con.query(`SELECT userCode FROM users`, function (err, results) {
+        if (err) throw err;
+        const values = results
+          .map((row) => `('${row.userCode}', ${req.query.cantidad}, '${req.query.concepto}')`)
+          .join(",");
+        // Insertamos las relaciones en la tabla users_missions
+        con.query(
+          `INSERT INTO transactions (id, zkoins, concepto) VALUES ${values}`,
+          function (err) {
+            if (err) throw err;
+          }
+        );
+      });
+    } else  {
+      con.query( 
+        `INSERT INTO transactions (id, zkoins, concepto) VALUES ('${req.query.userCode}', ${req.query.cantidad}, '${req.query.concepto}')`,
+        function (err) {
+          if (err) throw err;
+        }
+      );
+    }
+
     con.query(updateRanksQuery, function (err, result) {
       if (err) throw err;
       return res.send({
@@ -30,6 +54,7 @@ router.get("/add", async (req, res) => {
         type: req.query.type,
       });
     });
+
   });
 });
 

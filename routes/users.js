@@ -74,10 +74,10 @@ router.get("/user-zkoins-points", async (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     con.query(
-      `SELECT zkoins, rango, SUM(futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points FROM users WHERE userCode = '${req.query.userCode}'`,
+      `SELECT b.zkoins, a.zkoins AS movements, a.concepto FROM transactions a JOIN users b ON a.id = b.userCode WHERE a.id = '${req.query.userCode}' ORDER BY a.datetime ASC`,
       function (err, result) {
         if (err) throw err;
-        return res.send(result[0]);
+        return res.send(result);
       }
     );
   });
@@ -149,6 +149,7 @@ router.get("/misions", (req, res) => {
     );
   });
 });
+
 
 router.get("/jobs", (req, res) => {
   const con = createConnection();
