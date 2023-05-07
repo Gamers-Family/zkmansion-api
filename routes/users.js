@@ -91,7 +91,7 @@ router.get("/ranking", async (req, res) => {
 
     if (req.query.game === "global") {
       con.query(
-        `SELECT apodo, rango, imagen,
+        `SELECT apodo, rango, imagen, userCode,
         SUM(futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points
         FROM users
         JOIN media ON users.id = media.id
