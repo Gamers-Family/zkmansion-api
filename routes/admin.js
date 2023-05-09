@@ -46,6 +46,58 @@ router.get("/add", async (req, res) => {
       );
     }
 
+    const webhookURL = "https://discord.com/api/webhooks/1105530142849253497/OPXvu4D4KbcYkMQ-KvydVbS1Qpnzkn6tAYkU_F0zIrWY0lSY-V_llzVzyX5mPYhkwhc4";
+
+    const message = {
+      "content": req.query.adminApodo + "... No vas a escapar de mi control.",
+      "embeds": [
+        {
+          "title": "Registro",
+          "description": req.query.adminApodo + " ha realizado una acción.",
+          "color": null,
+          "fields": [
+            {
+              "name": "Moneda",
+              "value": "ZKoins",
+              "inline": true
+            },
+            {
+              "name": "Cantidad",
+              "value": req.query.cantidad,
+              "inline": true
+            },
+            {
+              "name": "Usuario",
+              "value": req.query.userApodo,
+              "inline": true
+            },
+            {
+              "name": "Concepto",
+              "value": req.query.concepto
+            }
+          ],
+          "author": {
+            "name": "ZK SAPO"
+          },
+          "thumbnail": {
+            "url": "https://i1.sndcdn.com/avatars-9HdeTFNDdqT6kzbT-VezoGQ-t500x500.jpg"
+          }
+        }
+      ],
+      "username": "Sapo",
+      "attachments": []
+    };
+
+    fetch(webhookURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(message)
+    })
+    .then(response => console.log(response))
+    .catch(error => console.error(error));
+
     con.query(updateRanksQuery, function (err, result) {
       if (err) throw err;
       return res.send({
