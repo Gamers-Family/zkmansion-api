@@ -27,7 +27,10 @@ router.get("/add", async (req, res) => {
       con.query(`SELECT userCode FROM users`, function (err, results) {
         if (err) throw err;
         const values = results
-          .map((row) => `('${row.userCode}', ${req.query.cantidad}, '${req.query.concepto}')`)
+          .map(
+            (row) =>
+              `('${row.userCode}', ${req.query.cantidad}, '${req.query.concepto}')`
+          )
           .join(",");
         // Insertamos las relaciones en la tabla users_missions
         con.query(
@@ -37,8 +40,8 @@ router.get("/add", async (req, res) => {
           }
         );
       });
-    } else  {
-      con.query( 
+    } else {
+      con.query(
         `INSERT INTO transactions (id, zkoins, concepto) VALUES ('${req.query.userCode}', ${req.query.cantidad}, '${req.query.concepto}')`,
         function (err) {
           if (err) throw err;
@@ -46,57 +49,58 @@ router.get("/add", async (req, res) => {
       );
     }
 
-    const webhookURL = "https://discord.com/api/webhooks/1105530142849253497/OPXvu4D4KbcYkMQ-KvydVbS1Qpnzkn6tAYkU_F0zIrWY0lSY-V_llzVzyX5mPYhkwhc4";
+    const webhookURL =
+      "https://discord.com/api/webhooks/1105530142849253497/OPXvu4D4KbcYkMQ-KvydVbS1Qpnzkn6tAYkU_F0zIrWY0lSY-V_llzVzyX5mPYhkwhc4";
 
     const message = {
-      "content": req.query.adminApodo + "... No vas a escapar de mi control.",
-      "embeds": [
+      content: req.query.adminApodo + "... No vas a escapar de mi control.",
+      embeds: [
         {
-          "title": "Registro",
-          "description": req.query.adminApodo + " ha realizado una acción.",
-          "color": null,
-          "fields": [
+          title: "Registro",
+          description: req.query.adminApodo + " ha realizado una acción.",
+          color: null,
+          fields: [
             {
-              "name": "Moneda",
-              "value": "ZKoins",
-              "inline": true
+              name: "Moneda",
+              value: "ZKoins",
+              inline: true,
             },
             {
-              "name": "Cantidad",
-              "value": req.query.cantidad,
-              "inline": true
+              name: "Cantidad",
+              value: req.query.cantidad,
+              inline: true,
             },
             {
-              "name": "Usuario",
-              "value": req.query.userApodo,
-              "inline": true
+              name: "Usuario",
+              value: req.query.userApodo,
+              inline: true,
             },
             {
-              "name": "Concepto",
-              "value": req.query.concepto
-            }
+              name: "Concepto",
+              value: req.query.concepto,
+            },
           ],
-          "author": {
-            "name": "ZK SAPO"
+          author: {
+            name: "ZK SAPO",
           },
-          "thumbnail": {
-            "url": "https://i1.sndcdn.com/avatars-9HdeTFNDdqT6kzbT-VezoGQ-t500x500.jpg"
-          }
-        }
+          thumbnail: {
+            url: "https://i1.sndcdn.com/avatars-9HdeTFNDdqT6kzbT-VezoGQ-t500x500.jpg",
+          },
+        },
       ],
-      "username": "Sapo",
-      "attachments": []
+      username: "Sapo",
+      attachments: [],
     };
 
     fetch(webhookURL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(message)
+      body: JSON.stringify(message),
     })
-    .then(response => console.log(response))
-    .catch(error => console.error(error));
+      .then((response) => console.log(response))
+      .catch((error) => console.error(error));
 
     con.query(updateRanksQuery, function (err, result) {
       if (err) throw err;
@@ -106,7 +110,6 @@ router.get("/add", async (req, res) => {
         type: req.query.type,
       });
     });
-
   });
 });
 
@@ -171,7 +174,7 @@ const _updateRanks = async () => {
 
   const users = await new Promise((resolve, reject) => {
     con.query(
-      `SELECT userCode, rango, (futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS total_points 
+      `SELECT userCode, rango, (puntosGeneral + futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS total_points 
       FROM users 
       ORDER BY total_points DESC`,
       function (err, result) {
