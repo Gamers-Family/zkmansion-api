@@ -62,7 +62,8 @@ router.get("/user-profile-with-image", async (req, res) => {
       WHERE userCode = '${req.query.userCode}'`,
       function (err, result) {
         if (err) throw err;
-        return res.send(result[0]);
+        res.send(result[0]);
+        con.end();
       }
     );
   });
@@ -77,7 +78,8 @@ router.get("/user-zkoins-points", async (req, res) => {
       `SELECT zkoins, rango, SUM(puntosGeneral + futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points FROM users WHERE userCode = '${req.query.userCode}'`,
       function (err, result) {
         if (err) throw err;
-        return res.send(result[0]);
+        res.send(result[0]);
+        con.end()
       }
     );
   });
@@ -92,7 +94,8 @@ router.get("/monedero", async (req, res) => {
       `SELECT b.zkoins, a.zkoins AS movements, a.concepto FROM transactions a JOIN users b ON a.id = b.userCode WHERE a.id = '${req.query.userCode}' ORDER BY a.datetime ASC`,
       function (err, result) {
         if (err) throw err;
-        return res.send(result);
+        res.send(result);
+        con.end()
       }
     );
   });
@@ -159,7 +162,8 @@ router.get("/misions", (req, res) => {
       `SELECT m.mision, m.type FROM user_mision um INNER JOIN misiones m ON um.idmision = m.id INNER JOIN users u ON um.iduser = u.id WHERE u.userCode = '${userCode}'`,
       function (err, result) {
         if (err) throw err;
-        return res.send(result);
+        res.send(result);
+        con.end();
       }
     );
   });
@@ -174,7 +178,8 @@ router.get("/jobs", (req, res) => {
       `SELECT j.text, j.icon, j.dia, j.hora FROM user_job uj INNER JOIN jobs j ON uj.idjob = j.id INNER JOIN users u ON uj.iduser = u.id WHERE u.userCode = '${userCode}' ORDER BY j.dia ASC, j.hora`,
       function (err, result) {
         if (err) throw err;
-        return res.send(result);
+        res.send(result);
+        con.end();
       }
     );
   });

@@ -10,7 +10,8 @@ router.get("/", async (req, res) => {
 
     con.query("SELECT * FROM premios", function (err, result) {
       if (err) throw err;
-      return res.send(result);
+      res.send(result);
+      con.end();
     });
   });
 });
