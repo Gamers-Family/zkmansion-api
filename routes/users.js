@@ -74,7 +74,7 @@ router.get("/user-zkoins-points", async (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     con.query(
-      `SELECT zkoins, rango, SUM(futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points FROM users WHERE userCode = '${req.query.userCode}'`,
+      `SELECT zkoins, rango, SUM(puntosGeneral + futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points FROM users WHERE userCode = '${req.query.userCode}'`,
       function (err, result) {
         if (err) throw err;
         return res.send(result[0]);
@@ -107,7 +107,7 @@ router.get("/ranking", async (req, res) => {
     if (req.query.game === "global") {
       con.query(
         `SELECT apodo, rango, imagen, userCode,
-        SUM(futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points
+        SUM(puntosGeneral + futbol + ajedrez + pong + panuelo + valorant + pokemon + billar + matar) AS points
         FROM users
         JOIN media ON users.id = media.id
         GROUP BY apodo
